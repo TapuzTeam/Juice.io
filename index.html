@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+<title>Juice V The World</title>
+<style>
+    html,
+    body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+    }
+    body,
+    canvas {
+        background-color: black;
+    }
+    body {
+        display: flex;
+    }
+    canvas {
+        width: 100%;
+        object-fit: contain;
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
+        border: 1px solid white;
+    }
+    img {
+        display: none;
+    }
+    .gamepad{
+        width: 100px;
+        height: 100px;
+        background-color: grey;
+        position: absolute;
+    }
+    .gamepadButton{
+        height: 30px;
+        width: 30px;
+    }
+</style>
+</head>
+<body>
+    <div class="gamepad">
+        <button class="gamepadButton arrow">&#8593</button>
+        <button class="gamepadButton arrow">&#8595</button>
+        <button class="gamepadButton arrow">&#8594</button>
+        <button class="gamepadButton arrow">&#8592</button>
+        <button class="gamepadButton gun">knife</button>
+        <button class="gamepadButton gun">gun</button>
+        <button class="gamepadButton gun">flame</button>
+        <button class="gamepadButton action">shoot</button>
+    </div>
+    <canvas id="canvas" width="300" height="150" ></canvas>
+<img src="./src/images/sand.png" alt="sand">
+<img src="./src/images/knife.png" alt="knife">
+<img src="./src/images/ak47.png" alt="ak47">
+<img src="./src/images/flamethrower.png" alt="flamethrower">
+<img src="./src/images/bullet.png" alt="bullet">
+<img src="./src/images/flame.png" alt="flame">
+</body>
+<script type="module" src="./src/js/index.js"></script>
+</html>
