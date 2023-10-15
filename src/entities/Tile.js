@@ -8,7 +8,7 @@ export class Tile {
         this.color = color;
     }
     
-    draw(context, player){
+    draw(frameTime, context, player){
         this.position.x *= this.width;
         this.position.y *= this.width;
 
@@ -24,7 +24,7 @@ export class Tile {
         this.position.y /= this.width;
     }
 
-    update(){
+    update(frameTime, context, player){
         
     }
 }

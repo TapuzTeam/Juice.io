@@ -12,7 +12,7 @@ export class Bullet{
         this.lifespan = lifespan;
     }
 
-    update(player){
+    update(frameTime, context, player){
         let changeX = Math.floor(this.position.x - this.position.initialX);
         let changeY = Math.floor(this.position.y - this.position.initialY);
         let travelled = Math.sqrt(changeX*changeX + changeY*changeY);
@@ -21,7 +21,7 @@ export class Bullet{
         this.position.y += this.velocity * Math.sin(this.angle * Math.PI/180);
     }
 
-    draw(context, player){
+    draw(frameTime, context, player){
         let relativePos = {
             x: RenderRelativeToPlayer(player, this, 'WIDTH'),
             y: RenderRelativeToPlayer(player, this, 'HEIGHT'),

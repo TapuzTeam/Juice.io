@@ -10,7 +10,7 @@ export class GameMap{
         }
     }
 
-    draw(context){
+    draw(frameTime, context, player){
         context.fillStyle = 'black'
         context.fillRect(0,0, GameViewport.WIDTH, GameViewport.HEIGHT);
 

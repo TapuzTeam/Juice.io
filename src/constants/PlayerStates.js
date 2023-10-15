@@ -1,11 +1,8 @@
 export const PlayerStates = {
-    IDLE: 'idle',
-    WALK_NORTH: 'walkNorth',
-    WALK_SOUTH: 'walkSouth',
-    WALK_EAST: 'walkEast',
-    WALK_WEST: 'walkWest',
-    WALK_NORTHWEST: 'walkNorthwest',
-    WALK_NORTHEAST: 'walkNortheast',
-    WALK_SOUTHWEST: 'walkSouthwest',
-    WALK_SOUTEAST: 'walkSoutheast',
+    MOVE_IDLE: 'moveIdle',
+    MOVE_WALK: 'moveWalk',
+    
+    ACTION_IDLE: 'actionIdle',
+    ACTION_SHOOT: 'actionShoot',
+    ACTION_RELOAD: 'actionReload',
 }
