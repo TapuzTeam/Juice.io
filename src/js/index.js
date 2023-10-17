@@ -1,9 +1,10 @@
 import { GameViewport } from "../constants/GameViewport.js";
+import { EntityNames } from "../constants/Sprites.js";
 import { allBullets } from "../entities/Bullet.js";
+import { Dummy } from "../entities/Dummy.js";
 import { Gun } from "../entities/Guns.js";
 import { MainPlayer } from "../entities/MainPlayer.js";
 import { GameMap } from "../entities/Map.js";
-import { Player } from "../entities/Player.js";
 import { Tile } from "../entities/Tile.js"
 import { registerKeyboardEvents } from "./handleKeyInputs.js";
 import { KeyboardControls } from "./keyboard.js";
@@ -11,7 +12,9 @@ import { KeyboardControls } from "./keyboard.js";
 
 
 const gameMap = new GameMap(-1000, -1000, 1000, 1000)
-const player = new MainPlayer(gameMap, 0, 0, 100, 100, 0, 0)
+const player = new MainPlayer(gameMap, 0, 0, 0, 0)
+const dummy1 = new Dummy(gameMap, -200, -200, 0, 0)
+
 
 var frameTime = {
     previous: 0,
@@ -47,15 +50,16 @@ const entities = [
     gameMap,
     ...tiles,
     ...allBullets,
+    dummy1,
     player,
 ]
 
 
 function arrowFunctionality(){
     let guns = document.querySelectorAll('.gun')
-    guns[0].addEventListener('click', () => {player.mainHand = new Gun('knife', 'melee', 3, 30, 200, 'bullet', 0, 0, 0, 0)})
-    guns[1].addEventListener('click', () => {player.mainHand = new Gun('ak47', 'range', 3, 30, 150, 'bullet', 1, 20, 4, 400)})
-    guns[2].addEventListener('click', () => {player.mainHand = new Gun('flamethrower', 'range', 3, 100, 30, 'flame', 5, 10, 20, 300)})
+    guns[0].addEventListener('click', () => {player.mainHand = new Gun(EntityNames.GUN_AK47)})
+    guns[1].addEventListener('click', () => {player.mainHand = new Gun(EntityNames.GUN_GRENADE_LAUNCHER)})
+    guns[2].addEventListener('click', () => {player.mainHand = new Gun(EntityNames.GUN_GALLO_SA12)})
     let actions = document.querySelectorAll('.action')
 
 }
@@ -65,7 +69,7 @@ window.addEventListener('load', () => {
     const context = canvas.getContext('2d')
     canvas.width  = GameViewport.WIDTH;
     canvas.height = GameViewport.HEIGHT;
-    
+    context.imageSmoothingEnabled = false;
     registerKeyboardEvents(player)
     
     canvas.addEventListener('contextmenu', (event) => {event.preventDefault()})
@@ -80,7 +84,6 @@ function frame(time){
     const canvas = /** @type {HTMLCanvasElement} */ document.querySelector('canvas')
     const context = canvas.getContext('2d')
 
-    
 
     frameTime = {
         secondsPassed: Math.floor((time - frameTime.previous)*1000)/1000 / 1000,
@@ -96,7 +99,7 @@ function frame(time){
     });
 
     allBullets.forEach(bullet => {
-        bullet.update();
+        bullet.update(frameTime);
         bullet.draw(frameTime,  context, player);
     });
 }

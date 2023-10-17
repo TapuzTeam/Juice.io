@@ -17,8 +17,8 @@ export class Bullet{
         let changeY = Math.floor(this.position.y - this.position.initialY);
         let travelled = Math.sqrt(changeX*changeX + changeY*changeY);
         if (travelled >= this.lifespan){allBullets.delete(this.id)};
-        this.position.x += this.velocity * Math.cos(this.angle * Math.PI/180);
-        this.position.y += this.velocity * Math.sin(this.angle * Math.PI/180);
+        this.position.x += this.velocity * Math.cos(this.angle * Math.PI/180) * frameTime.secondsPassed;
+        this.position.y += this.velocity * Math.sin(this.angle * Math.PI/180) * frameTime.secondsPassed;
     }
 
     draw(frameTime, context, player){
