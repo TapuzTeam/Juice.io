@@ -6,12 +6,13 @@ export class Tile {
         this.height = 100;
         this.position = {x:posX, y:posY};
         this.color = color;
+        console.log('ass')
     }
     
     draw(frameTime, context, player){
         this.position.x *= this.width;
         this.position.y *= this.width;
-
+        
         //if (this.position.x - Math.ceil(player.position.x/100) > 8 || this.position.y - Math.ceil(player.position.y/100) > 5){return;}
         context.fillStyle = this.color;
     

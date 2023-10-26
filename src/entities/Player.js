@@ -1,12 +1,15 @@
+import { Entities, InteractionLayers } from "../constants/Entities.js";
 import { GameViewport } from "../constants/GameViewport.js";
 import { PlayerStates } from "../constants/PlayerStates.js";
 import { EntityNames } from "../constants/Sprites.js";
 import { isNorth, isEast, isSouth, isWest, isShoot, isReload } from "../js/handleKeyInputs.js";
+import { randStr } from "../js/index.js";
 import { allBullets } from "./Bullet.js";
 import { Gun } from "./Guns.js";
 
 export class Player {
     constructor(gameMap, x, y, vX, vY){
+        this.id = randStr()
         this.image = document.querySelector(`img[alt="jew"`);
         this.position = {x: x, y: y};
         this.dimensions = {x:this.image.width, y:this.image.height};

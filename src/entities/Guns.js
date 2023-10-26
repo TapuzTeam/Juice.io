@@ -1,7 +1,7 @@
 import { GameViewport } from "../constants/GameViewport.js";
 import { EntityNames, GunSpecs, SpriteMap } from "../constants/Sprites.js";
+import { randStr } from "../js/index.js";
 import { allBullets, Bullet } from "./Bullet.js";
-function randStr(){return (Math.random() + 1).toString(36).substring(7);}
 
 export class Gun{
     constructor(item){
@@ -10,6 +10,7 @@ export class Gun{
         this.specs = GunSpecs[this.item]
         this.name = this.specs.NAME;
         this.image = document.querySelector(`img[alt=gunsprites]`);
+        this.flash = document.querySelector(`img[alt=flash]`);
         this.spriteMap = SpriteMap[this.item]
         this.rangeType = this.specs.RANGETYPE;
         this.maxMags = this.specs.MAXMAGS;
@@ -19,6 +20,7 @@ export class Gun{
         this.shotDelay = this.specs.SHOTDELAY;
         this.lastShot = 0;
         this.curReload = 0;
+        this.isShoot = false;
         this.reloadTime = this.specs.RELOADDELAY;
         this.bullet = {
             bulletImage: this.specs.BULLETNAME,
@@ -45,7 +47,11 @@ export class Gun{
         context.rotate(Math.PI /180 * (degrees));
 
         if (degrees > -90 && degrees < 90){context.scale(this.scale, this.scale);} else {context.scale(this.scale, -this.scale)}
-        context.drawImage(this.image, originX, originY, width, height, width/4, -5, width, height)
+        context.drawImage(this.image, originX, originY, width, height, -width * this.scale/6, -5, width, height)
+        if (this.isShoot){
+            context.drawImage(this.flash, width/1.4, -this.flash.height/2)
+            this.isShoot = false;
+        }
 
         context.restore()
         this.drawUI(context)
@@ -69,7 +75,7 @@ export class Gun{
         context.restore()
     }
 
-    shoot(posX, posY, angle){
+    shoot(shooterID, posX, posY, angle){
         let [originX, originY, width, height] = this.spriteMap
         if(this.lastShot < this.shotDelay){return;}
         if (this.rangeType == 'melee'){return 'melee';}
@@ -81,14 +87,15 @@ export class Gun{
         for (let i = 0; i < this.bullet.bulletCount; i++){
             nexBullet -= this.bullet.spread/this.bullet.bulletCount
             let newId = randStr();
-            let degrees = angle - spread - nexBullet - this.bullet.spread/2
+            let degrees = Math.floor((angle - spread - nexBullet - this.bullet.spread/2) * 100)/100
             if (this.bullet.bulletCount > 1) degrees = angle - nexBullet - this.bullet.spread/2
-            let dist = width * this.scale * 1.2
+            let dist = width * this.scale * 1.2/2
             let bulX = Math.floor(dist * Math.cos(degrees * Math.PI/180));
             let bulY = Math.floor(dist * Math.sin(degrees * Math.PI/180));
-            allBullets.set(newId, new Bullet(newId, this.bullet.bulletImage, posX + bulX, posY + bulY, degrees, this.bullet.speed,  this.bullet.lifespan))
+            allBullets.set(newId, new Bullet(newId, shooterID, this.bullet.bulletImage, posX + bulX, posY + bulY, degrees, this.bullet.speed,  this.bullet.lifespan))
         };
         this.curMag -= 1
+        this.isShoot = true;
     }
 
     reload(frameTime){

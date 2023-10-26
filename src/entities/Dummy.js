@@ -1,3 +1,4 @@
+import { Entities, InteractionLayers } from "../constants/Entities.js";
 import { Player } from "./Player.js";
 import { GameViewport, RenderRelativeToPlayer } from "../constants/GameViewport.js";
 import { PlayerStates } from "../constants/PlayerStates.js";
@@ -9,10 +10,9 @@ import { Gun } from "./Guns.js";
 export class Dummy extends Player{
     constructor(gameMap, x, y, vX, vY){
         super(gameMap, x, y, vX, vY)
-        this.directionVelocity = {
-            x: 0,
-            y: 0
-        }
+        this.entityType = Entities.ENEMY
+        this.colliders = InteractionLayers[this.entityType]
+        this.directionVelocity = {x: 0, y: 0}
         this.image = document.querySelector(`img[alt=dummy`);
         this.dimensions = {x:this.image.width, y:this.image.height};
         this.speed = 400;

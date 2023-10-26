@@ -1,3 +1,4 @@
+import { Entities, InteractionLayers } from "../constants/Entities.js";
 import { Player } from "./Player.js";
 import { GameViewport } from "../constants/GameViewport.js";
 import { PlayerStates } from "../constants/PlayerStates.js";
@@ -9,10 +10,9 @@ import { Gun } from "./Guns.js";
 export class MainPlayer extends Player{
     constructor(gameMap, x, y, vX, vY){
         super(gameMap, x, y, vX, vY)
-        this.directionVelocity = {
-            x: 0,
-            y: 0
-        }
+        this.entityType = Entities.PLAYER
+        this.colliders = InteractionLayers[this.entityType]
+        this.directionVelocity = {x: 0,y: 0}
         this.image = document.querySelector(`img[alt=jew`);
         this.speed = 400;
         this.mainHand = new Gun(EntityNames.GUN_AK47)
@@ -45,7 +45,6 @@ export class MainPlayer extends Player{
         if (!directionVelocity.x && !directionVelocity.y) {this.changeState(PlayerStates.MOVE_IDLE); return;}
         this.calculateSpeed(directionVelocity.x, directionVelocity.y);
         this.handleMove(frameTime)
-        console.log(this.position)
     }
 
     //ACTION STATES
@@ -118,7 +117,7 @@ export class MainPlayer extends Player{
 
         //draw player
         let degrees = Math.atan2(this.cursorPosition.y - GameViewport.HEIGHT/2, this.cursorPosition.x - GameViewport.WIDTH/2) * 180 / Math.PI
-        context.translate(GameViewport.WIDTH / 2, GameViewport.HEIGHT / 2);
+        context.translate(GameViewport.WIDTH / 2, GameViewport.HEIGHT / 2 - this.dimensions.y/6);
         if (degrees > -90 && degrees < 90){context.scale(1, 1);} else {context.scale(-1, 1)}
         context.drawImage(this.image, -this.dimensions.x/2, -this.dimensions.y/2)
         context.restore()
@@ -152,7 +151,7 @@ export class MainPlayer extends Player{
 
     shoot(){
         let angle = Math.atan2(this.cursorPosition.y - GameViewport.HEIGHT/2, this.cursorPosition.x - GameViewport.WIDTH/2) * 180 / Math.PI
-        return this.mainHand.shoot(this.position.x, this.position.y, angle);
+        return this.mainHand.shoot(this.id, this.position.x, this.position.y, angle);
     }
     
     reload(frameTime){
