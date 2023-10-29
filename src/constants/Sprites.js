@@ -55,10 +55,10 @@ export const GunSpecs = {
         RELOADDELAY: 1000,
         BULLETNAME: 'bullet',
         BULLETCOUNT: '1',
-        BULLETSPEED: 1500,
+        BULLETSPEED: 2200,
         BULLETSPREAD: '4',
         BULLETLIFESPAN: 600,
-        BULLETDAMAGE: '1',
+        BULLETDAMAGE: '8',
     },
     [EntityNames.GUN_P90]: {
         NAME: 'P90',

@@ -6,7 +6,6 @@ export class Tile {
         this.height = 100;
         this.position = {x:posX, y:posY};
         this.color = color;
-        console.log('ass')
     }
     
     draw(frameTime, context, player){

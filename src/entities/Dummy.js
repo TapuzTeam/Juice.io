@@ -17,6 +17,7 @@ export class Dummy extends Player{
         this.dimensions = {x:this.image.width, y:this.image.height};
         this.speed = 400;
         this.mainHand = new Gun(EntityNames.GUN_AK47)
+        this.damageTaken = []
     }
 
     handleMoveIdleInit(){
@@ -78,9 +79,32 @@ export class Dummy extends Player{
     }
 
     handleMove(frameTime){
-        this.position.x += this.velocity.x * frameTime.secondsPassed
-        this.position.y += this.velocity.y * frameTime.secondsPassed
+        this.position.x += this.velocity.x * frameTime.secondsPassed;
+        this.position.y += this.velocity.y * frameTime.secondsPassed;
         this.checkMapBoundary()
+    }
+
+    changeHealth(frameTime, amount, source){
+        let absolute = Math.abs(amount);
+        let type = amount > 0 ? 'positive' : 'negative';
+        this.damageTaken.push({amount: absolute, type: type, time: frameTime.previous, float: Math.floor(Math.random() * 30), offset: Math.floor(Math.random() * 40) * (Math.random() < .5 ? 1 : -1)})
+        console.log(this.damageTaken)
+    }
+
+    drawHealthChange(frameTime, context, player){
+        let float;
+        let offset;
+        this.damageTaken.forEach(instance => {
+            if (frameTime.previous - instance.time > 1000) this.damageTaken.splice((this.damageTaken.findIndex((inst) => inst.time == instance.time)), 1);
+            float =  instance.float + 70 * (frameTime.previous - instance.time)/1000
+            offset = instance.offset
+            context.save()
+            context.font = '28px CS'
+            context.fillStyle = instance.type == 'negative' ? 'red' : 'green'
+            let textWidth = context.measureText(instance.amount).width
+            context.fillText(instance.amount, RenderRelativeToPlayer(player, this, 'WIDTH') - textWidth/2 - offset, RenderRelativeToPlayer(player, this, 'HEIGHT') - this.dimensions.y/2 - float)
+            context.restore()
+        });
     }
 
     update(frameTime, context, player){
@@ -96,6 +120,6 @@ export class Dummy extends Player{
         context.drawImage(this.image, RenderRelativeToPlayer(player, this, 'WIDTH') -this.dimensions.x/2, RenderRelativeToPlayer(player, this, 'HEIGHT') -this.dimensions.y/2)
         context.restore()
 
-        context.restore()
+        this.drawHealthChange(frameTime, context, player)
     }
 }

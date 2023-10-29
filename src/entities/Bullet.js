@@ -1,25 +1,29 @@
 import { Entities, InteractionLayers } from "../constants/Entities.js";
 import { GameViewport, RenderRelativeToPlayer } from "../constants/GameViewport.js";
+import { GunSpecs } from "../constants/Sprites.js";
 import { checkCollision } from "../js/collisions.js";
 
 export const allBullets = new Map()
 
 export class Bullet{
-    constructor(id, shooterID, bulletName, x, y, angle, velocity, lifespan){
-        this.image = document.querySelector(`img[alt="${bulletName}"`);
+    constructor(id, shooterID, x, y, angle, gun){
         this.id = id;
         this.shooterID = shooterID;
-        this.entityType = Entities.BULLET
-        this.colliders = InteractionLayers[this.entityType]
+        this.entityType = Entities.BULLET;
+        this.colliders = InteractionLayers[this.entityType];
+        this.bulletOf = gun;
+        this.gunSpecs = GunSpecs[this.bulletOf];
+        this.image = document.querySelector(`img[alt="${this.gunSpecs.BULLETNAME}"`);
         this.position = {x: x, y: y, initialX: x, initialY: y}
         this.angle = angle;
-        this.velocity = velocity;
-        this.lifespan = lifespan;
-
-        this.toDraw = true;
+        this.velocity = this.gunSpecs.BULLETSPEED;
+        this.lifespan = this.gunSpecs.BULLETLIFESPAN;
+        this.damage = this.gunSpecs.BULLETDAMAGE;
+        this.toDelete = false;
     }
 
     update(frameTime, context, player){
+        if (this.toDelete) return;
         let changeX = Math.floor(this.position.x - this.position.initialX);
         let changeY = Math.floor(this.position.y - this.position.initialY);
         let travelled = Math.sqrt(changeX*changeX + changeY*changeY);
@@ -29,7 +33,7 @@ export class Bullet{
     }
 
     draw(frameTime, context, player){
-        if (!this.toDraw) return;
+        if (this.toDelete) return;
         let relativePos = {
             x: RenderRelativeToPlayer(player, this, 'WIDTH'),
             y: RenderRelativeToPlayer(player, this, 'HEIGHT'),
@@ -41,16 +45,20 @@ export class Bullet{
         if (this.angle > -90 && this.angle < 90){context.scale(1, 1);} else {context.scale(1, -1)}
         context.translate(-relativePos.x, -relativePos.y, this.width, this.height);
         context.drawImage(this.image, relativePos.x, relativePos.y);
-        context.fillStyle = 'black'
-        context.restore()
+        context.fillStyle = 'black';
+        context.restore();
     }
 
-    checkCollision(entity){
+    checkCollision(entity, frameTime){
         if (!this.colliders.includes(entity.entityType)) return;
         if (this.shooterID == entity.id) return;
         if (!checkCollision(this, entity)) return;
-        this.toDraw = false;
         
+        if (typeof entity.changeHealth === 'function'){
+            entity.changeHealth(frameTime, -this.damage)
+        }
+
+        this.toDelete = true;
         this.delete()
     }
 

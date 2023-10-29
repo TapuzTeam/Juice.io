@@ -33,7 +33,7 @@ var frameTime = {
 
 var tiles = [gameMap];
 function createTiles(){
-    tiles = []
+    tiles = [gameMap]
     let color;
     let tileRange = (gameMap.boundaries.maxX-gameMap.boundaries.minX)/(new Tile().width)
     for (let x = -tileRange/2; x<tileRange/2; x++){
@@ -58,7 +58,6 @@ function createTiles(){
 }
 createTiles()
 var entities = [
-    gameMap,
     dummy1,
     player,
 ]
@@ -84,7 +83,7 @@ window.addEventListener('load', () => {
     canvas.addEventListener('contextmenu', (event) => {event.preventDefault()})
     
     arrowFunctionality()
-    window.requestAnimationFrame(frame)    
+    window.requestAnimationFrame(frame)
 })
 
 function frame(time){
@@ -106,7 +105,7 @@ function frame(time){
         if (entity instanceof Bullet) {
             entities.forEach((nonBulletEntity) =>{
                 if (nonBulletEntity instanceof Bullet) return;
-                entity.checkCollision(nonBulletEntity)
+                entity.checkCollision(nonBulletEntity, frameTime)
         })}
         entity.update(frameTime, context, player);
     });

@@ -92,7 +92,7 @@ export class Gun{
             let dist = width * this.scale * 1.2/2
             let bulX = Math.floor(dist * Math.cos(degrees * Math.PI/180));
             let bulY = Math.floor(dist * Math.sin(degrees * Math.PI/180));
-            allBullets.set(newId, new Bullet(newId, shooterID, this.bullet.bulletImage, posX + bulX, posY + bulY, degrees, this.bullet.speed,  this.bullet.lifespan))
+            allBullets.set(newId, new Bullet(newId, shooterID, posX + bulX, posY + bulY, degrees, this.item))
         };
         this.curMag -= 1
         this.isShoot = true;
